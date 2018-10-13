@@ -147,7 +147,7 @@ def parseDashboardPage(page, bing_url):
 
     return allRewards
 
-def createReward(reward, rUrl, rName, rPC, rPM, rDesc, hitId=None, hitHash=None):
+def createReward(reward, rUrl, rName, rPC, rPM, rDone, rDesc, hitId=None, hitHash=None):
     reward.url = rUrl.strip().replace(' ','')
     reward.name = rName.strip().encode('latin-1', 'ignore')
     reward.progressCurrent = rPC
@@ -157,8 +157,7 @@ def createReward(reward, rUrl, rName, rPC, rPM, rDesc, hitId=None, hitHash=None)
         reward.hitId = hitId
     if hitHash:
         reward.hitHash = hitHash
-    if rPC == rPM:
-        reward.isDone = True
+    reward.isDone = rDone
 
     for t in Reward.Type.ALL:
         if t[Reward.Type.Col.ISRE]:         # regex
@@ -187,6 +186,7 @@ def createRewardNewFormat(page, title, newRwd):
     rewardName = ''
     rewardProgressCurrent = 0
     rewardProgressMax = 0
+    rewardComplete = False
     rewardDescription = ''
     # We're going to use this as at trigger to determine whether to process the reward or throw it out. If there is no "complete" attribute (true/false) then ignore the reward
     hasComplete = -1
@@ -222,10 +222,12 @@ def createRewardNewFormat(page, title, newRwd):
                     if not (attrDateObj.year == curDate.year and attrDateObj.month == curDate.month and attrDateObj.day == curDate.day):
                         isValid = False
             if attrType == "complete":
-                if current[1] == 'True':
+                if current[1].lower() == 'true':
                     hasComplete = 1
-                if current[1] == 'False':
+                    rewardComplete = True
+                if current[1].lower() == 'false':
                     hasComplete = 0
+                    rewardComplete = False
             if attrType == "offerid":
                 hitIdentifier = cleanString(current[1])
 
@@ -241,7 +243,7 @@ def createRewardNewFormat(page, title, newRwd):
     if hasComplete == -1:
         isValid = False
     if isValid:
-        createReward(newRwd, rewardURL, rewardName, rewardProgressCurrent, rewardProgressMax, rewardDescription, hitIdentifier, hitHash)
+        createReward(newRwd, rewardURL, rewardName, rewardProgressCurrent, rewardProgressMax, rewardComplete, rewardDescription, hitIdentifier, hitHash)
     return isValid
 
 def cleanString(strToClean):

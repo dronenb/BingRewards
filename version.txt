@@ -1,4 +1,6 @@
-Current version 3.16.13
+Current version 3.16.14
+
+3.16.14  *) @specu, Complete 0 point activities as they often lead to point rewards
 
 3.16.13  *) @specu, Added support for "Football fanatic" quiz
 

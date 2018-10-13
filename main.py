@@ -35,8 +35,8 @@ from helpers import BingAccountError
 verbose = False
 totalPoints = 0
 
-SCRIPT_VERSION = "3.16.13"
-SCRIPT_DATE = "October 12, 2018"
+SCRIPT_VERSION = "3.16.14"
+SCRIPT_DATE = "October 13, 2018"
 
 def earnRewards(config, httpHeaders, userAgents, reportItem, password):
     """Earns Bing reward points and populates reportItem"""
